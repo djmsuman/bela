@@ -1,0 +1,30 @@
+name: 'bela'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    environment:
+      # Set environment variables for database connection
+      POSTGRES_NAME: bela-db
+      POSTGRES_USER: pguser
+      POSTGRES_PASSWORD: pgpass
+
+  db:
+    image: postgres:16
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_DB: bela-db
+      POSTGRES_USER: pguser
+      POSTGRES_PASSWORD: pgpass
+
+volumes:
+  postgres_data:

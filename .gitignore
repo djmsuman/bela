@@ -1,0 +1,65 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*$py.class
+
+# C extensions
+*.so
+
+# Environments
+.env
+venv/
+env/
+ENV/
+*.bak
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Django stuff
+*.log
+*.pot
+*.mo
+db.sqlite3
+local_settings.py
+/media/
+/static/
+
+# IDE and editor settings
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+
+# OS-specific files
+.DS_Store
+.DS_Store?
+ehthumbs.db
+Thumbs.db
+
+# Project metadata and packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFOLD

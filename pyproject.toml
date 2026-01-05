@@ -1,0 +1,13 @@
+[project]
+name = "bela"
+version = "0.1.0"
+description = "Bela - a personal AI assitant"
+authors = [{ name = "Deepjyoti Mukherjee", email = "djmsuman@gmail.com" }]
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = ["django (>=6.0,<7.0)", "djangorestframework (>=3.16.1,<4.0.0)", "psycopg (>=3.3.2,<4.0.0)", "psycopg-binary (>=3.3.2,<4.0.0)"]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
