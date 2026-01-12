@@ -1,20 +1,6 @@
 name: 'bela'
 
 services:
-  web:
-    build: .
-    ports:
-      - "8000:8000"
-    volumes:
-      - .:/app
-    depends_on:
-      - db
-    environment:
-      # Set environment variables for database connection
-      POSTGRES_NAME: bela-db
-      POSTGRES_USER: pguser
-      POSTGRES_PASSWORD: pgpass
-
   db:
     image: postgres:16
     ports:
@@ -26,5 +12,76 @@ services:
       POSTGRES_USER: pguser
       POSTGRES_PASSWORD: pgpass
 
+  redis:
+    image: redis:7-alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - redis
+    environment:
+      POSTGRES_NAME: bela-db
+      POSTGRES_USER: pguser
+      POSTGRES_PASSWORD: pgpass
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: django-db
+
+  celery_worker:
+    build: .
+    command: poetry run celery -A config worker --beat --scheduler django --loglevel=info -E
+    volumes:
+      - .:/app
+    environment:
+      POSTGRES_NAME: bela-db
+      POSTGRES_USER: pguser
+      POSTGRES_PASSWORD: pgpass
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: django-db
+    depends_on:
+      - redis
+      - db
+    restart: on-failure
+
+  redisinsight:
+    image: redislabs/redisinsight:latest
+    restart: always
+    ports:
+      - "5540:5540"
+    volumes:
+      - redisinsight-data:/data
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    depends_on:
+      - redis
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    ports:
+      - "8080:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@pg.db
+      PGADMIN_DEFAULT_PASSWORD: pgpass
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - db
+
 volumes:
   postgres_data:
+  pgadmin_data:
+  redis-data:
+    driver: local
+  redisinsight-data:
+    driver: local
